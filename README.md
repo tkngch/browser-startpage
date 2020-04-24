@@ -1,24 +1,12 @@
 # browser-startpage
 
-## Project setup
-```
-npm install
-```
+A start-up page for a web browser, which includes a clock and a simple bookmark manager.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+![Screenshot](./doc/img/screenshot-bookmarks.png)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## How to use
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+1. Build the web frontend: `npm run build`.
+2. Install the backend dependencies: `pip install -r requirements.txt`.
+3. Start the server: `python main.py`.
+4. Navigate to `localhost:33875` on your browser.
