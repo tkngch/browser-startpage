@@ -1,0 +1,7 @@
+[MASTER]
+# Let python-black take care of indentation.
+disable=bad-continuation
+
+[BASIC]
+# fastapi requres the small letter "app" variable in global scope.
+good-names=app,i,j,k
