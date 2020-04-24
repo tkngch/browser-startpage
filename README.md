@@ -10,3 +10,9 @@ A start-up page for a web browser, which includes a clock and a simple bookmark 
 2. Install the backend dependencies: `pip install -r requirements.txt`.
 3. Start the server: `python main.py`.
 4. Navigate to `localhost:33875` on your browser.
+
+## License
+
+This project is licensed under the terms of the GNU Affero General Public License v3.0.
+
+Copyright © 2020 Takao Noguchi.
