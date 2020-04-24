@@ -53,7 +53,7 @@
               </v-chip-group>
               <!-- By Status -->
               By Status
-              <v-chip-group v-model="filterBy.statusCodes" column multiple>
+              <v-chip-group v-model="filterBy.statusCode" column>
                 <v-chip
                   filter
                   outlined
@@ -105,7 +105,7 @@ export default {
     return {
       newBookmarkURL: "",
       sortBy: null,
-      filterBy: { tags: [], statusCodes: [] }
+      filterBy: { tags: [], statusCode: null }
     };
   },
 
@@ -122,14 +122,14 @@ export default {
     "filterBy.tags": function(newFilter) {
       this.$emit("filter-bookmarks", {
         tags: newFilter,
-        statusCodes: this.filterBy.statusCodes
+        statusCode: this.filterBy.statusCode
       });
     },
 
-    "filterBy.statusCodes": function(newFilter) {
+    "filterBy.statusCode": function(newFilter) {
       this.$emit("filter-bookmarks", {
         tags: this.filterBy.tags,
-        statusCodes: newFilter
+        statusCode: newFilter
       });
     },
 

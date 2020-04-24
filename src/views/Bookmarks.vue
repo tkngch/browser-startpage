@@ -69,9 +69,7 @@ function filterBookmarks(bookmarks, filterBy) {
       (filterBy.tags
         ? filterBy.tags.every(tag => bookmark.tags.includes(tag))
         : true) &&
-      (filterBy.statusCodes
-        ? filterBy.statusCodes.every(code => bookmark.statusCode == code)
-        : true)
+      (filterBy.statusCode ? filterBy.statusCode == bookmark.statusCode : true)
   );
   return filtered;
 }
@@ -136,7 +134,7 @@ export default {
       messages: { success: "", info: "", warning: "", error: "" },
       bookmarks: [],
       isEditActive: {},
-      filterBy: { tags: [], statusCodes: [] },
+      filterBy: { tags: [], statusCode: null },
       sortBy: null,
       sortOptions: ["New", "Old", "Most Visits", "Least Visits"]
     };
