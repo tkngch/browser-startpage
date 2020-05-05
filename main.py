@@ -5,7 +5,6 @@
 from os import getenv
 from os.path import expandvars
 from pathlib import Path
-import logging
 
 from fastapi import APIRouter
 from fastapi import FastAPI
@@ -36,9 +35,12 @@ async def root():
 
 
 @app.get("/{resource}", include_in_schema=False)
-async def serve_spa(resource: str):
-    """Serve a single page application file."""
-    logging.info("Requesting %s.", resource)
+def serve_static(resource: str):
+    """Serve a static file, if it exists."""
+    resource_path = DIST.joinpath(resource)
+    if resource_path.is_file():
+        return FileResponse(path=resource_path)
+
     return FileResponse(path=DIST.joinpath("index.html"))
 
 
