@@ -8,6 +8,7 @@ from typing import List
 from datetime import datetime
 from uuid import UUID
 from uuid import uuid4
+import re
 
 import requests
 
@@ -154,7 +155,11 @@ class Live(Service):
         response = requests.get(url)
 
         content = response.content.decode("utf-8", errors="ignore")
-        title = content.split("<title>")[1].split("</title>")[0]
+        title = re.split(
+            "</title>",
+            re.split("<title>", content, flags=re.IGNORECASE)[1],
+            flags=re.IGNORECASE,
+        )[0]
 
         bookmark = Bookmark(
             id=uuid4(),
