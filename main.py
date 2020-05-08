@@ -5,6 +5,8 @@
 from os import getenv
 from os.path import expandvars
 from pathlib import Path
+import argparse
+from inspect import getdoc
 
 from fastapi import APIRouter
 from fastapi import FastAPI
@@ -74,9 +76,27 @@ app.add_middleware(
 )
 
 
-if __name__ == "__main__":
+def main():
+    """Start the ASGI server (uvicorn) to serve the startpage."""
+    parser = argparse.ArgumentParser(description=getdoc(main))
+    parser.add_argument(
+        "--development",
+        action="store_true",
+        help="Run in the development mode.",
+    )
+    args = parser.parse_args()
+
     # Note that the port number has to be the same as the one hard-coded in
     # src/services/BookmarkService.js.
     uvicorn.run(
-        "main:app", host="127.0.0.1", port=33875, log_level="info", reload=True
+        "main:app",
+        host="127.0.0.1",
+        port=33875,
+        log_level="info",
+        reload=args.development,
+        reload_dirs=[Path(__file__).parent.as_posix()],
     )
+
+
+if __name__ == "__main__":
+    main()
