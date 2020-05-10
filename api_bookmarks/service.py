@@ -6,6 +6,7 @@ from abc import ABC
 from abc import abstractmethod
 from typing import List
 from datetime import datetime
+from urllib.parse import urlparse
 from uuid import UUID
 from uuid import uuid4
 import re
@@ -152,14 +153,17 @@ class Live(Service):
 
         # Python's urllib.request.urlopen fails at Status 308 (permanent
         # redirect), so here, use requests library instead.
-        response = requests.get(url)
-
+        response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
         content = response.content.decode("utf-8", errors="ignore")
-        title = re.split(
-            "</title>",
-            re.split("<title>", content, flags=re.IGNORECASE)[1],
-            flags=re.IGNORECASE,
-        )[0]
+
+        # If the page does not have a title tag (e.g., direct link to a file),
+        # the last part of url is assumed title.
+        title = urlparse(response.url).path.strip("/").split("/")[-1]
+        title_match = re.search(
+            "<title>(.*)</title>", content, flags=re.IGNORECASE
+        )
+        if title_match is not None:
+            title = title_match.group(1)
 
         bookmark = Bookmark(
             id=uuid4(),

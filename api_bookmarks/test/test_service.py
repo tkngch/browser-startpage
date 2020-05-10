@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """api_bookmarks.test.test_service."""
 
+from collections import namedtuple
 from datetime import datetime
 from typing import List
 from uuid import UUID
@@ -135,36 +136,29 @@ def test_visiting() -> None:
 
 
 @pytest.fixture(autouse=True)
-def mock_urlopen(monkeypatch):
-    """Intercept urlopen to prevent the actual http request from being sent."""
+def mock_response(monkeypatch):
+    """Prevent the actual http request from being sent."""
 
-    class MockOpen:
-        """Mock returned object from urlopen."""
+    MockResponse = namedtuple(
+        "MockResponse", ["url", "content", "status_code", "args", "kwargs"]
+    )
 
-        def __init__(self, url):
-            self.url = url
-
-        @staticmethod
-        def read() -> str:
-            """Mock read."""
-            return b"""
+    def mock_get(url, *args, **kwargs):
+        return MockResponse(
+            url=url,
+            content=b"""
                 <!DOCTYPE html>
                 <html>
                     <head> <title>Test</title> </head>
                     <body> Hello World </body>
                 </html>
-            """
+            """,
+            status_code=401,
+            args=args,
+            kwargs=kwargs,
+        )
 
-        def geturl(self) -> str:
-            """Mock geturl."""
-            return self.url
-
-        @staticmethod
-        def getcode() -> int:
-            """Mock getcode."""
-            return 401
-
-    monkeypatch.setattr("api_bookmarks.service.urlopen", MockOpen)
+    monkeypatch.setattr("api_bookmarks.service.requests.get", mock_get)
 
 
 class MockDatabase(Database):
