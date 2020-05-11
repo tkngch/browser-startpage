@@ -1,6 +1,6 @@
 <!-- Menu for bookmarks (e.g., adding, filtering, and sorting) -->
 <template>
-  <v-list dense rounded max-width="300">
+  <v-list dense rounded>
     <v-list-item>
       <v-card>
         <v-expansion-panels multiple hover>
