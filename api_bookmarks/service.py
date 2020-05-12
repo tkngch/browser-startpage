@@ -4,8 +4,9 @@
 
 from abc import ABC
 from abc import abstractmethod
-from typing import List
 from datetime import datetime
+from html import unescape
+from typing import List
 from urllib.parse import urlparse
 from uuid import UUID
 from uuid import uuid4
@@ -160,10 +161,12 @@ class Live(Service):
         # the last part of url is assumed title.
         title = urlparse(response.url).path.strip("/").split("/")[-1]
         title_match = re.search(
-            "<title>(.*)</title>", content, flags=re.IGNORECASE
+            "<title(.*)>(.*)</title>", content, flags=re.IGNORECASE
         )
         if title_match is not None:
-            title = title_match.group(1)
+            # Unescape the HTML escape sequence: for example, convert "&amp;"
+            # to "&".
+            title = unescape(title_match.group(2))
 
         bookmark = Bookmark(
             id=uuid4(),
