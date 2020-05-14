@@ -161,12 +161,12 @@ class Live(Service):
         # the last part of url is assumed title.
         title = urlparse(response.url).path.strip("/").split("/")[-1]
         title_match = re.search(
-            "<title(.*)>(.*)</title>", content, flags=re.IGNORECASE
+            "<title(.*)>(.*)</title>", content, flags=re.IGNORECASE | re.DOTALL
         )
         if title_match is not None:
             # Unescape the HTML escape sequence: for example, convert "&amp;"
             # to "&".
-            title = unescape(title_match.group(2))
+            title = unescape(title_match.group(2)).strip()
 
         bookmark = Bookmark(
             id=uuid4(),
