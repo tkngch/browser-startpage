@@ -7,6 +7,7 @@ from abc import abstractmethod
 from datetime import datetime
 from html import unescape
 from typing import List
+from unicodedata import normalize
 from urllib.parse import urlparse
 from uuid import UUID
 from uuid import uuid4
@@ -159,15 +160,7 @@ class Live(Service):
 
         # If the page does not have a title tag (e.g., direct link to a file),
         # the last part of url is assumed title.
-        title = urlparse(response.url).path.strip("/").split("/")[-1]
-        title_match = re.search(
-            "<title(.*)>(.*)</title>", content, flags=re.IGNORECASE | re.DOTALL
-        )
-        if title_match is not None:
-            # Unescape the HTML escape sequence: for example, convert "&amp;"
-            # to "&".
-            title = unescape(title_match.group(2)).strip()
-
+        title = self._extract_title(content, response.url)
         bookmark = Bookmark(
             id=uuid4(),
             url=response.url,
@@ -176,3 +169,31 @@ class Live(Service):
             checkedDatetime=self._get_datetime(),
         )
         return bookmark
+
+    @staticmethod
+    def _extract_title(content: str, url: str) -> str:
+        default_title = urlparse(url).path.strip("/").split("/")[-1]
+
+        # A website can have a title tag inside the body, in which case
+        # `re.search` returns the last title tag in the body. So limit
+        # search to inside the head.
+        head = re.search(
+            "<head(.*)>(.*)</head>", content, flags=re.IGNORECASE | re.DOTALL
+        )
+
+        if head is None:
+            return default_title
+
+        title_match = re.search(
+            "<title(.*)>(.*)</title>",
+            head.group(0),
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        if title_match is None:
+            return default_title
+
+        # Unescape the HTML escape sequence: for example, convert "&amp;"
+        # to "&".
+        # And normalize to unicode string: for example, "\xa0" to " " (white
+        # space).
+        return normalize("NFKD", unescape(title_match.group(2)).strip())
