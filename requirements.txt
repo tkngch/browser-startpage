@@ -1,4 +1,10 @@
-fastapi>=0.54.1
-requests>=2.23.0
-uvicorn>=0.11.3
-aiofiles>=0.4.0
+aiofiles==0.5.0
+beautifulsoup4==4.9.0
+fastapi==0.55.1
+requests==2.23.0
+uvicorn==0.11.5
+black==19.10b0
+pylint==2.5.2
+pytest==5.4.2
+mypy==0.770
+pytest-cov==2.9.0

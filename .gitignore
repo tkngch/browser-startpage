@@ -1,8 +1,6 @@
 .DS_Store
 node_modules
 /dist
-__pycache__
-.coverage
 
 # local env files
 .env.local
@@ -21,3 +19,10 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# python stuff
+.coverage
+.mypy_cache
+.venv
+__pycache__
+.pytest_cache
