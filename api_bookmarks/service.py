@@ -36,9 +36,7 @@ class Service(ABC):
         """Retrieve bookmarks from the database."""
 
     @abstractmethod
-    def add_bookmarks(
-        self, parameters: List[BookmarkParameterAdd]
-    ) -> List[Bookmark]:
+    def add_bookmarks(self, parameters: List[BookmarkParameterAdd]) -> List[Bookmark]:
         """Add new bookmarks to the database."""
 
     @abstractmethod
@@ -58,9 +56,7 @@ class Service(ABC):
         """
 
     @abstractmethod
-    def delete_bookmarks(
-        self, parameters: List[BookmarkParameterDelete]
-    ) -> None:
+    def delete_bookmarks(self, parameters: List[BookmarkParameterDelete]) -> None:
         """Delete the bookmarks from the database.
 
         Once deleted, a bookmark cannot be un-deleted.
@@ -77,9 +73,7 @@ class Live(Service):
     def get_bookmarks(self, bookmark_ids: List[UUID] = None) -> List[Bookmark]:
         return self.database.get_bookmarks(bookmark_ids)
 
-    def add_bookmarks(
-        self, parameters: List[BookmarkParameterAdd]
-    ) -> List[Bookmark]:
+    def add_bookmarks(self, parameters: List[BookmarkParameterAdd]) -> List[Bookmark]:
 
         bookmarks = []
         for parameter in parameters:
@@ -119,15 +113,11 @@ class Live(Service):
         )
         return self.get_bookmarks([parameter.id for parameter in parameters])
 
-    def delete_bookmarks(
-        self, parameters: List[BookmarkParameterDelete]
-    ) -> None:
-        self.database.delete_bookmarks(
-            [parameter.id for parameter in parameters]
-        )
+    def delete_bookmarks(self, parameters: List[BookmarkParameterDelete]) -> None:
+        self.database.delete_bookmarks([parameter.id for parameter in parameters])
 
     def visit_bookmark(self, parameter: BookmarkParameterVisit) -> Bookmark:
-        new_parameter = BookmarkParameterVisit(
+        new_parameter = Bookmark(
             id=parameter.id,
             visitCount=parameter.visitCount + 1,
             lastVisitDatetime=self._get_datetime(),
@@ -185,9 +175,7 @@ class Live(Service):
             return default_title
 
         title_match = re.search(
-            "<title(.*)>(.*)</title>",
-            head.group(0),
-            flags=re.IGNORECASE | re.DOTALL,
+            "<title(.*)>(.*)</title>", head.group(0), flags=re.IGNORECASE | re.DOTALL,
         )
         if title_match is None:
             return default_title

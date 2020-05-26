@@ -51,9 +51,7 @@ class Database(ABC):
         """Insert a new bookmark to the database."""
 
     @abstractmethod
-    def update_bookmarks(
-        self, bookmarks: List[Bookmark], fields: List[str]
-    ) -> None:
+    def update_bookmarks(self, bookmarks: List[Bookmark], fields: List[str]) -> None:
         """Update Bookmarks' fields.
 
         Only the listed fields are updated in the database."""
@@ -97,9 +95,7 @@ class SQLite(Database):
         with sqlite3.connect(self.database) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
-            records = self._execute_select_query(
-                cursor, bookmark_ids, tag_denominator
-            )
+            records = self._execute_select_query(cursor, bookmark_ids, tag_denominator)
         conn.close()
 
         return [
@@ -109,12 +105,8 @@ class SQLite(Database):
                 title=record["title"],
                 description=record["description"],
                 tags=sorted(record["tags"].split(tag_denominator)),
-                checkedDatetime=self._encode_datetime(
-                    record["checkedDatetime"]
-                ),
-                lastVisitDatetime=self._encode_datetime(
-                    record["lastVisitDatetime"]
-                ),
+                checkedDatetime=self._encode_datetime(record["checkedDatetime"]),
+                lastVisitDatetime=self._encode_datetime(record["lastVisitDatetime"]),
                 visitCount=record["visitCount"],
                 statusCode=record["statusCode"],
             )
@@ -188,14 +180,11 @@ class SQLite(Database):
             ]
             if tag_insert_args:
                 cursor.executemany(
-                    "INSERT INTO tag (name, bookmarkId) VALUES (?, ?)",
-                    tag_insert_args,
+                    "INSERT INTO tag (name, bookmarkId) VALUES (?, ?)", tag_insert_args,
                 )
         conn.close()
 
-    def update_bookmarks(
-        self, bookmarks: List[Bookmark], fields: List[str]
-    ) -> None:
+    def update_bookmarks(self, bookmarks: List[Bookmark], fields: List[str]) -> None:
         bookmark_table_fields = list(set(fields) - set(["tags"]))
         query = (
             "UPDATE bookmark SET "
@@ -205,10 +194,7 @@ class SQLite(Database):
 
         parameters = [
             tuple(
-                [
-                    self._get_field(bookmark, field)
-                    for field in bookmark_table_fields
-                ]
+                [self._get_field(bookmark, field) for field in bookmark_table_fields]
                 + [str(bookmark.id)]
             )
             for bookmark in bookmarks
@@ -228,19 +214,15 @@ class SQLite(Database):
         return value
 
     @staticmethod
-    def _update_tags(
-        cursor: sqlite3.Cursor, bookmarks: List[Bookmark]
-    ) -> None:
+    def _update_tags(cursor: sqlite3.Cursor, bookmarks: List[Bookmark]) -> None:
         for bookmark in bookmarks:
             cursor.execute(
-                "SELECT name FROM tag WHERE bookmarkId IS ?",
-                (str(bookmark.id),),
+                "SELECT name FROM tag WHERE bookmarkId IS ?", (str(bookmark.id),),
             )
             old_tags = cursor.fetchall()
             if old_tags and {tag[0] for tag in old_tags} != set(bookmark.tags):
                 cursor.execute(
-                    "DELETE FROM tag WHERE bookmarkId IS ?",
-                    (str(bookmark.id),),
+                    "DELETE FROM tag WHERE bookmarkId IS ?", (str(bookmark.id),),
                 )
 
                 cursor.executemany(

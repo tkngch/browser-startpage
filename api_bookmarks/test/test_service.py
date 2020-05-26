@@ -47,9 +47,7 @@ def test_adding() -> None:
 
     parameters = [
         BookmarkParameterAdd(url="python.org"),
-        BookmarkParameterAdd(
-            url="https://docs.pytest.org/en/latest/index.html"
-        ),
+        BookmarkParameterAdd(url="https://docs.pytest.org/en/latest/index.html"),
     ]
     bookmarks = service.add_bookmarks(parameters)
     assert len(parameters) == len(bookmarks)
@@ -115,9 +113,7 @@ def test_deleting() -> None:
 
     bookmarks = service.get_bookmarks()
 
-    parameters = [
-        BookmarkParameterDelete(id=bookmark.id) for bookmark in bookmarks[:1]
-    ]
+    parameters = [BookmarkParameterDelete(id=bookmark.id) for bookmark in bookmarks[:1]]
     service.delete_bookmarks(parameters)
 
 
@@ -196,16 +192,12 @@ class MockDatabase(Database):
         if not bookmark_ids:
             return bookmarks
 
-        return [
-            bookmark for bookmark in bookmarks if bookmark.id in bookmark_ids
-        ]
+        return [bookmark for bookmark in bookmarks if bookmark.id in bookmark_ids]
 
     def add_bookmarks(self, bookmarks: List[Bookmark]) -> None:
         return None
 
-    def update_bookmarks(
-        self, bookmarks: List[Bookmark], fields: List[str]
-    ) -> None:
+    def update_bookmarks(self, bookmarks: List[Bookmark], fields: List[str]) -> None:
         return None
 
     def delete_bookmarks(self, bookmark_ids: List[UUID]) -> None:

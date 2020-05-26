@@ -43,9 +43,7 @@ def test_adding() -> None:
 
     client = TestClient(app)
 
-    response = client.post(
-        "/api/v1/bookmarks", json=[{"url": "archlinux.org"}],
-    )
+    response = client.post("/api/v1/bookmarks", json=[{"url": "archlinux.org"}],)
     _check_response(response, service)
 
 
@@ -166,15 +164,9 @@ class MockService(Service):
     def get_bookmarks(self, bookmark_ids: List[UUID] = None) -> List[Bookmark]:
         if not bookmark_ids:
             return self.bookmarks
-        return [
-            bookmark
-            for bookmark in self.bookmarks
-            if bookmark.id in bookmark_ids
-        ]
+        return [bookmark for bookmark in self.bookmarks if bookmark.id in bookmark_ids]
 
-    def add_bookmarks(
-        self, parameters: List[BookmarkParameterAdd]
-    ) -> List[Bookmark]:
+    def add_bookmarks(self, parameters: List[BookmarkParameterAdd]) -> List[Bookmark]:
         return self.bookmarks
 
     def update_bookmarks(
@@ -187,9 +179,7 @@ class MockService(Service):
     ) -> List[Bookmark]:
         return self.bookmarks
 
-    def delete_bookmarks(
-        self, parameters: List[BookmarkParameterDelete]
-    ) -> None:
+    def delete_bookmarks(self, parameters: List[BookmarkParameterDelete]) -> None:
         return None
 
     def visit_bookmark(self, parameter: BookmarkParameterVisit) -> Bookmark:
