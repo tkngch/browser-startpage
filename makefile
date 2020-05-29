@@ -1,26 +1,36 @@
-serve:
-	.venv/bin/python main.py
+.PHONY: serve python pycheck pyblack pytest pylint install clear
 
-build: $(shell find src -type f -name "*.js" -o -name "*.vue")
+SYSTEMD_UNIT_FILE=${HOME}/.config/systemd/user/startpage.service
+
+dist: $(shell find src -type f -name "*.js" -o -name "*.vue")
 	npm run build
 
-pyinit:
+.venv: requirements.txt
 	python -m venv .venv
-
-pyinstall:
 	.venv/bin/pip install -r requirements.txt
 
-python:
+$(SYSTEMD_UNIT_FILE): startpage.service dist .venv
+	cp $< $@
+
+install: $(SYSTEMD_UNIT_FILE)
+
+serve: dist .venv
+	.venv/bin/python main.py
+
+python: .venv
 	.venv/bin/python
 
-pycheck:
+pycheck: .venv
 	.venv/bin/mypy api_bookmarks
 
-pyblack:
+pyblack: .venv
 	.venv/bin/black --check api_bookmarks
 
-pytest:
+pytest: .venv
 	.venv/bin/python -m pytest -x -v --pdb --cov=api_bookmarks --cov-report term-missing api_bookmarks
 
-pylint:
+pylint: .venv
 	.venv/bin/pylint api_bookmarks
+
+clear:
+	rm -rf .venv

@@ -1,0 +1,9 @@
+[Unit]
+Description=Startpage
+
+[Service]
+ExecStart=%h/src/browser-startpage/serve.sh
+; %h is replaced by the home directory of the user running the service
+
+[Install]
+WantedBy=default.target
