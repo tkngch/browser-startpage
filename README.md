@@ -1,5 +1,7 @@
 # browser-startpage
 
+[![codecov](https://codecov.io/gh/tkngch/browser-startpage/branch/master/graph/badge.svg)](https://codecov.io/gh/tkngch/browser-startpage)
+
 A start-up page for a web browser, which includes a clock and a simple bookmark manager.
 
 ![Screenshot](./doc/img/screenshot-bookmarks.png)

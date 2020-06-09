@@ -4,4 +4,9 @@ disable=bad-continuation
 
 [BASIC]
 # fastapi requres the small letter "app" variable in global scope.
-good-names=app,i,j,k
+good-names=app,id,i,j,k
+
+[SIMILARITIES]
+
+# Ignore imports when computing similarities.
+ignore-imports=yes
